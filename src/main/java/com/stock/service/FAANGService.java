@@ -30,12 +30,12 @@ public class FAANGService implements StockService {
 
     @Override
     public List<String> getStockNames() {
-        return Arrays.asList("APPL","GOOG","FB", "AMZN", "TWTR");
+        return Arrays.asList("AAPL","GOOG","FB", "AMZN", "TWTR");
     }
 
 
     private List<Stock> generateStock() {
-        Stock stockAPPL = generateStock("APPL");
+        Stock stockAPPL = generateStock("AAPL");
         Stock stockGOOG = generateStock("GOOG");
         Stock stockFB = generateStock("FB");
         Stock stockAMZN = generateStock("AMZN");
