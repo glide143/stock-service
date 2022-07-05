@@ -4,41 +4,65 @@ import com.stock.domain.Stock;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class FAANGService implements StockService {
-    private List<Stock> stocks;
-
-    public FAANGService() {
-        Stock stockAPPL = new Stock("AAPL", BigDecimal.valueOf(138.93), BigDecimal.valueOf(2.2099915),
-                BigDecimal.valueOf(0.01616436));
-        Stock stockGOOG = new Stock("GOOG", BigDecimal.valueOf(2181.62), BigDecimal.valueOf(-5.829834),
-                BigDecimal.valueOf(-0.0026651279));
-        Stock stockFB = new Stock("FB", BigDecimal.valueOf(196.64), BigDecimal.valueOf(0.9900055),
-                BigDecimal.valueOf(0.0050600846));
-        Stock stockAMZN = new Stock("AMZN", BigDecimal.valueOf(109.56), BigDecimal.valueOf(3.3499985),
-                BigDecimal.valueOf(0.031541273));
-        Stock stockTWTR = new Stock("TWTR", BigDecimal.valueOf(38.23), BigDecimal.valueOf(0.84000015),
-                BigDecimal.valueOf(0.022465907));
-
-        this.stocks = Arrays.asList(stockAPPL,stockGOOG,stockFB,stockAMZN,stockTWTR);
-    }
 
     @Override
-    public List<Stock> getStocks() {
+    public List<Stock> getStocks(List<String> symbols) {
+        if(symbols.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+       List<Stock> stocks = new ArrayList<>();
+
+        for (String symbol : symbols) {
+            for (Stock stock : generateStock()) {
+                if (symbol.equals(stock.getSymbol())) {
+                    stocks.add(stock);
+                }
+            }
+        }
+
         return stocks;
     }
 
     @Override
     public List<String> getStockNames() {
-        return stocks.stream().map(Stock::getSymbol).collect(Collectors.toList());
+        return Arrays.asList("APPL","GOOG","FB", "AMZN", "TWTR");
     }
 
-    @Override
-    public Stock findStockByName(String name) {
-        return stocks.stream().filter(stock -> stock.getSymbol().equals(name)).findFirst().get();
+
+    private List<Stock> generateStock() {
+        Stock stockAPPL = generateStock("APPL");
+        Stock stockGOOG = generateStock("GOOG");
+        Stock stockFB = generateStock("FB");
+        Stock stockAMZN = generateStock("AMZN");
+        Stock stockTWTR = generateStock("TWTR");
+
+        List<Stock> stocks = new ArrayList<>();
+        stocks.add(stockAPPL);
+        stocks.add(stockGOOG);
+        stocks.add(stockFB);
+        stocks.add(stockAMZN);
+        stocks.add(stockTWTR);
+
+        return stocks;
+    }
+
+    private Stock generateStock(String symbol) {
+        BigDecimal lastTradePriceOnly = generateRandomBigDecimalFromRange(BigDecimal.valueOf(-500L),
+                BigDecimal.valueOf(5_000L));
+        BigDecimal change = generateRandomBigDecimalFromRange(BigDecimal.valueOf(-500L),
+                BigDecimal.valueOf(1000L));
+        BigDecimal changeInPercent = generateRandomBigDecimalFromRange(BigDecimal.valueOf(0.022465907), BigDecimal.valueOf(1L));
+
+        return new Stock(symbol, lastTradePriceOnly, change, changeInPercent);
+    }
+
+    private static BigDecimal generateRandomBigDecimalFromRange(BigDecimal min, BigDecimal max) {
+        BigDecimal randomBigDecimal = min.add(new BigDecimal(Math.random()).multiply(max.subtract(min)));
+        return randomBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 }

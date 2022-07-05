@@ -6,10 +6,7 @@ import java.util.List;
 
 public interface StockService {
 
-    List<Stock> getStocks();
+    List<Stock> getStocks(List<String> symbols);
 
     List<String> getStockNames();
-
-    Stock findStockByName(String name);
-
 }
