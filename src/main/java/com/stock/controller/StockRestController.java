@@ -19,7 +19,7 @@ public class StockRestController {
     private StockService stockService;
 
     @GetMapping("/stocks")
-    List<Stock> getStocks(@ApiParam(example = "APPL,GOOG", value = "Stock Symbol")
+    List<Stock> getStocks(@ApiParam(example = "AAPL,GOOG", value = "Stock Symbol")
     @RequestParam("symbols") String symbol) {
         List<String> symbols = Stream.of(symbol.split(","))
                                   .map(String::trim)
